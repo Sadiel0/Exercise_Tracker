@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
-export  function CreateUser() {
-  return (
-    <div>createUser</div>
-  )
+export function CreateUser() {
+  return <div>createUser</div>;
 }

@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
-export  function ExerciseList() {
-  return (
-    <div>exercise-list</div>
-  )
+export function ExerciseList() {
+  return <div>exercise-list</div>;
 }
