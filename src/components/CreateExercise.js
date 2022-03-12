@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import axios from "axios";
 export function CreateExercise(props) {
   const [state, setState] = useState({
     username: "",
@@ -18,7 +18,7 @@ export function CreateExercise(props) {
     });
   }, []);
 
-  function onSubmit(event) {
+  const onSubmit = (event) => {
     event.preventDefault();
 
     const exercise = {
@@ -27,19 +27,20 @@ export function CreateExercise(props) {
       duration: state.duration,
       date: state.date,
     };
-
     console.log(exercise);
-
-    window.location = "/";
-  }
+    axios
+      .post("http://localhost:5000/exercise/add", exercise)
+      .then((res) => console.log(res.data));
+  };
   const handleUsername = (e) => {
-    setState({ username: e.traget.value });
+    setState({ username: e.target.value });
   };
   const handleDescription = (e) => {
-    setState({ description: e.traget.value });
+    setState({ description: e.target.value });
   };
+
   const handleDuration = (e) => {
-    setState({ duration: e.traget.value });
+    setState({ duration: e.target.value });
   };
   const handleDate = (date) => {
     setState({ date: date });
@@ -51,18 +52,19 @@ export function CreateExercise(props) {
         <div className="form-group">
           <label>Username: </label>
           <select
-            required
+            // required
             className="form-control"
             value={state.username}
             onChange={handleUsername}
           >
-            {state.users.map((user, index) => {
-              return (
-                <option key={index} value={user}>
-                  {user}
-                </option>
-              );
-            })}
+            {state.users &&
+              state.users.map((user, index) => {
+                return (
+                  <option key={user} value={user}>
+                    {user}
+                  </option>
+                );
+              })}
           </select>
         </div>
         <div className="form-group">
