@@ -3,18 +3,28 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 export function CreateExercise(props) {
-  const [state, setState] = useState({
-    username: "",
-    description: "",
-    duration: 0,
-    date: new Date(),
-    users: [],
-  });
+  // const [state, setState] = useState({
+  //   username: "",
+  //   description: "",
+  //   duration: 0,
+  //   date: new Date(),
+  //   users: [],
+  // });
+
+  const [username, setUsername] = useState("");
+  const [description, setDescription] = useState("");
+  const [duration, setDuration] = useState(0);
+  const [date, setDate] = useState(new Date());
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    setState({
-      users: ["Test user"],
-      username: "Testing user",
+    axios.get("http://localhost:5000/users/").then((response) => {
+      if (response.data.length > 0) {
+        setUsers(
+          response.data.map((user) => user.username)
+          // username: response.data.username,
+        );
+      }
     });
   }, []);
 
@@ -22,28 +32,28 @@ export function CreateExercise(props) {
     event.preventDefault();
 
     const exercise = {
-      username: state.username,
-      description: state.description,
-      duration: state.duration,
-      date: state.date,
+      username: username,
+      description: description,
+      duration: duration,
+      date: date,
     };
     console.log(exercise);
     axios
-      .post("http://localhost:5000/exercise/add", exercise)
+      .post("http://localhost:5000/exercises/add", exercise)
       .then((res) => console.log(res.data));
   };
   const handleUsername = (e) => {
-    setState({ username: e.target.value });
+    setUsername(e.target.value);
   };
   const handleDescription = (e) => {
-    setState({ description: e.target.value });
+    setDescription(e.target.value);
   };
 
   const handleDuration = (e) => {
-    setState({ duration: e.target.value });
+    setDuration(e.target.value);
   };
   const handleDate = (date) => {
-    setState({ date: date });
+    setDate(date);
   };
   return (
     <div>
@@ -54,13 +64,13 @@ export function CreateExercise(props) {
           <select
             // required
             className="form-control"
-            value={state.username}
+            value={username}
             onChange={handleUsername}
           >
-            {state.users &&
-              state.users.map((user, index) => {
+            {users &&
+              users.map((user, index) => {
                 return (
-                  <option key={user} value={user}>
+                  <option key={index} value={user}>
                     {user}
                   </option>
                 );
@@ -73,7 +83,7 @@ export function CreateExercise(props) {
             type="text"
             required
             className="form-control"
-            value={state.description}
+            value={description}
             onChange={handleDescription}
           />
         </div>
@@ -82,14 +92,14 @@ export function CreateExercise(props) {
           <input
             type="text"
             className="form-control"
-            value={state.duration}
+            value={duration}
             onChange={handleDuration}
           />
         </div>
         <div className="form-group">
           <label>Date: </label>
           <div>
-            <DatePicker selected={state.date} onChange={handleDate} />
+            <DatePicker selected={date} onChange={handleDate} />
           </div>
         </div>
 
