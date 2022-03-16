@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-export function ExerciseList() {
+import { Exercise } from "./Exercise";
+export function ExerciseList(props) {
   const [state, setState] = useState({
     exercises: [],
   });
@@ -17,7 +17,7 @@ export function ExerciseList() {
       });
   });
 
-  const deleExercise = (id) => {
+  const deleteExercise = (id) => {
     axios
       .delete("http://localhost:5000/exercises/" + id)
       .then((response) => console.log(response.data));
@@ -26,5 +26,34 @@ export function ExerciseList() {
       exercises: state.exercises.filter((element) => element._id !== id),
     });
   };
-  return <div>exercise-list</div>;
+
+  const exerciseList = () => {
+    return state.exercises.map((currExercise) => {
+      return (
+        <Exercise
+          exercises={currExercise}
+          deleteExercise={deleteExercise}
+          key={currExercise._id}
+        />
+      );
+    });
+  };
+
+  return (
+    <>
+      <h2>Exercises</h2>
+      <table className="table">
+        <thead className="thead-dark">
+          <tr>
+            <th>Username</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>{exerciseList()}</tbody>
+      </table>
+    </>
+  );
 }
